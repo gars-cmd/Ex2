@@ -4,46 +4,47 @@ import api.GeoLocation;
 import api.NodeData;
 
 public class Nodes implements NodeData {
- 
+
     private Point_3D point;
     private int id;
-    private double weight=0;
-    private String info=null;
-    private int tag=0;
+    private double weight = 0;
+    private String info = null;
+    private int tag = 0;
     private ArrayList<Edges> edgeList = new ArrayList<>(0);
-    
+    private ArrayList<Edges> edgeListtoMe = new ArrayList<>();
 
-    
-
-    public Nodes(Point_3D point,int id){
+    public Nodes(Point_3D point, int id) {
         // this.point.setX(point.x());
         // this.point.setY(point.y());
         // this.point.setZ(point.z());
         this.point = point;
-        this.id=id;
-        
+        this.id = id;
+
     }
 
-
-    public Nodes (Nodes other){
+    public Nodes(Nodes other) {
         this.point = new Point_3D(other.getLocation());
         this.edgeList = new ArrayList<>();
         for (int i = 0; i < other.edgeList.size(); i++) {
             this.edgeList.add(other.edgeList.get(i));
         }
         this.id = other.getKey();
-        
+
     }
 
-    public ArrayList<Edges> getEdgeList(){
+    public ArrayList<Edges> getEdgeList() {
         return this.edgeList;
+    }
+
+    public ArrayList<Edges> getEdgeListToMe() {
+        return this.edgeListtoMe;
     }
 
     @Override
     public int getKey() {
         // TODO Auto-generated method stub
 
-        return this.id ;
+        return this.id;
     }
 
     @Override
@@ -58,8 +59,7 @@ public class Nodes implements NodeData {
         this.point.setX(p.x());
         this.point.setY(p.y());
         this.point.setZ(p.z());
-       
-        
+
     }
 
     @Override
@@ -71,8 +71,8 @@ public class Nodes implements NodeData {
     @Override
     public void setWeight(double w) {
         // TODO Auto-generated method stub
-        this.weight=w;
-        
+        this.weight = w;
+
     }
 
     @Override
@@ -84,8 +84,8 @@ public class Nodes implements NodeData {
     @Override
     public void setInfo(String s) {
         // TODO Auto-generated method stub
-        this.info=s;
-        
+        this.info = s;
+
     }
 
     @Override
@@ -97,10 +97,14 @@ public class Nodes implements NodeData {
     @Override
     public void setTag(int t) {
         // TODO Auto-generated method stub
-        this.tag=t;
+        this.tag = t;
     }
 
+    public String toString() {
+        String ans = "";
+        ans += ("Nodes : x=" + this.point.x() + " y=" + this.point.y() + " z=" + this.point.z() + " id="
+                + this.getKey());
+        return ans;
+    }
 
-
-    
 }
