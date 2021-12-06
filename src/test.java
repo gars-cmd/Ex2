@@ -8,33 +8,24 @@ import java.io.*;
 
 public class test {
     public static void main(String[] args) throws IOException, ParseException {
-        ArrayList<Integer> test = new ArrayList<>();
-        test.add(5);
-        // System.out.println(test.get(0));
-        Point_3D p = new Point_3D(1, 2, 3);
-        Point_3D d = new Point_3D(p);
-        Point_3D f = new Point_3D(4, 5, 6);
-        // System.out.println("p("+p.x()+", "+p.y()+", "+p.z()+")\n");
-        // System.out.println("d("+d.x()+", "+d.y()+", "+d.z()+")");
-        // Nodes node = new Nodes(p , 0);
-        Nodes node = new Nodes(new Point_3D(1, 2, 3), 1);
-        System.out.println("p(" + node.getLocation().x() + ", " + node.getLocation().y() + ", " + node.getLocation().z()
-                + ")" + node.getKey() + "\n");
-        node.setLocation(f);
-        System.out.println("p(" + node.getLocation().x() + ", " + node.getLocation().y() + ", " + node.getLocation().z()
-                + ")" + node.getKey() + "\n");
+        
         ArrayList[] array_graph = jsonToGraph(
                 "/mnt/c/Users/avido/Documents/Universite/matalot/OOP_2021/Assignments/Ex2/data/G1.json");
 
         DWG testgraph = new DWG(array_graph[0], array_graph[1]);
-        Nodes alone = new Nodes(d, 17);
-        System.out.println(testgraph.nodeSize());
-        testgraph.addNode(alone);
-        System.out.println(testgraph.nodeSize());
-        for (int i = 0; i < testgraph.nodeSize(); i++) {
-            System.out.println(testgraph.getNode(i).toString());
-        }
+        
+        //System.out.println(testgraph.nodeSize());
+        //testgraph.addNode(alone);
+        // System.out.println(testgraph.nodeSize());
+        // for (int i = 0; i < testgraph.nodeSize(); i++) {
+        //     System.out.println(testgraph.getNode(i).toString());
+        // }
         System.out.println(isConnected(testgraph));
+        // for (Nodes node2 : testgraph.getNodeList()) {
+        //     for (EdgeData edge : node2.getEdgeMap().values()) {
+        //         System.out.println(edge.toString());
+        //     }
+        // }
     }
 
     public static ArrayList[] jsonToGraph(String jsonPath) throws IOException, ParseException {
@@ -82,9 +73,11 @@ public class test {
         ArrayList<Edges> reverseEdges = new ArrayList<>();
         for (int i = 0; i < graph.nodeSize(); i++) {
             Nodes curr = (Nodes) graph.getNode(i);
-            for (int j = 0; j < curr.getEdgeList().size(); j++) {
-                reverseEdges.add(new Edges(curr.getEdgeList().get(j).getDest(), curr.getEdgeList().get(j).getWeight(),
-                        curr.getEdgeList().get(j).getSrc()));
+            for (EdgeData edge : curr.getEdgeMap().values()) {
+                int src = edge.getSrc();
+                int dest = edge.getDest();
+                double weight = edge.getWeight();
+                reverseEdges.add(new Edges(dest, weight,src));
             }
         }
         DWG reverseOne = new DWG(graph.getNodeList(), reverseEdges);
@@ -101,10 +94,11 @@ public class test {
     private static void DFS(DWG graph, int v) {
         Nodes curr = (Nodes) graph.getNode(v);
         curr.setTag(1); // means visited
-        for (int i = 0; i < curr.getEdgeList().size(); i++) {
-            NodeData isVisited = graph.getNode(curr.getEdgeList().get(i).getDest());
+        for (EdgeData edges : curr.getEdgeMap().values()) {
+            //NodeData isVisited = graph.getNode(curr.getEdgeMap().get(edges).getDest());
+            NodeData isVisited = graph.getNode((edges.getDest()));
             if (isVisited.getTag() == 0) {
-                DFS(graph, (curr.getEdgeList().get(i).getDest()));
+                DFS(graph, edges.getDest());
             }
         }
     }
