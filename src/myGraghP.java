@@ -1,3 +1,6 @@
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
@@ -7,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -251,9 +255,9 @@ public class myGraghP  implements ActionListener, MouseListener {
                 String file_name = String.valueOf((file));
 
 
-                test t = new test();
+
                 try {
-                    ArrayList[] array_graph = t.jsonToGraph(file_name);
+                    ArrayList[] array_graph = jsonToGraph(file_name);
                     DWG testgraph = new DWG(array_graph[0],array_graph[1]);
                     new myGraghP(testgraph.getNodeList());
 //                    ArrayList<Nodes> arrNodes = new ArrayList<>();
@@ -367,7 +371,36 @@ public class myGraghP  implements ActionListener, MouseListener {
 
     }
 
+    private ArrayList[] jsonToGraph(String jsonPath) throws IOException, java.text.ParseException, org.json.simple.parser.ParseException {
+        ArrayList[] list_graph = new ArrayList[2];
+        JSONParser jsonParse = new JSONParser();
+        FileReader reader = new FileReader(jsonPath);
+        Object obj = jsonParse.parse(reader);
+        JSONObject graphJson = (JSONObject) obj;
+        ArrayList<Nodes> node_list = new ArrayList<>();
+        ArrayList<Edges> edge_list = new ArrayList<>();
+        JSONArray Edges_array = (JSONArray) graphJson.get("Edges");
+        for (int i = 0; i < Edges_array.size(); i++) {
+            JSONObject edgeElement = (JSONObject) Edges_array.get(i);
+            int srcE = Math.toIntExact((long) edgeElement.get("src"));
+            double wE = (double) edgeElement.get("w");
+            int destE = Math.toIntExact((long) edgeElement.get("dest"));
+            edge_list.add(new Edges(srcE, wE, destE));
 
+        }
+        JSONArray Nodes_array = (JSONArray) graphJson.get("Nodes");
+        for (int i = 0; i < Nodes_array.size(); i++) {
+            JSONObject nodeElement = (JSONObject) Nodes_array.get(i);
+            String pos = (String) nodeElement.get("pos");
+            String[] posData = pos.split(",", 0);
+            Point_3D new_point = new Point_3D(Double.parseDouble(posData[0]), Double.parseDouble(posData[1]),
+                    Double.parseDouble(posData[2]));
+            node_list.add(new Nodes(new_point, Math.toIntExact((long) nodeElement.get("id"))));
+        }
+        list_graph[0] = node_list;
+        list_graph[1] = edge_list;
+        return list_graph;
+    }
 
     }
 

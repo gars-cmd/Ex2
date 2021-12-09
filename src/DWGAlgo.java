@@ -14,14 +14,13 @@ import java.util.Arrays;
 import java.util.List;
 
 
-
 public class DWGAlgo implements DirectedWeightedGraphAlgorithms {
 
     private DWG graph;
 
     @Override
     public void init(DirectedWeightedGraph g) {
-
+        this.graph = (DWG) g;
     }
 
     @Override
@@ -29,15 +28,16 @@ public class DWGAlgo implements DirectedWeightedGraphAlgorithms {
         return this.graph;
     }
 
+
     @Override
     public DirectedWeightedGraph copy() {
-        ArrayList<Nodes> nodeCopy= new ArrayList<>();
+        ArrayList<Nodes> nodeCopy = new ArrayList<>();
         for (Nodes node : this.graph.getNodeList()) {
             Nodes copy = new Nodes(node.getLocation(), node.getKey());
             for (int key : node.getEdgeMap().keySet()) {
-                copy.getEdgeMap().put(key,node.getEdgeMap().get(key));
+                copy.getEdgeMap().put(key, node.getEdgeMap().get(key));
             }
-        nodeCopy.add(node);
+            nodeCopy.add(node);
         }
         DWG copy = new DWG(nodeCopy);
         return copy;
@@ -47,7 +47,7 @@ public class DWGAlgo implements DirectedWeightedGraphAlgorithms {
     public boolean isConnected() {
         this.graph.initializeTag(); // make all node's tag = 0
         int v = 0;
-        DFS(this.graph,v);
+        DFS(this.graph, v);
         for (int i = 0; i < this.graph.nodeSize(); i++) {
             Nodes curr = (Nodes) this.graph.getNode(i);
             if (curr.getTag() != 1) {
@@ -62,7 +62,7 @@ public class DWGAlgo implements DirectedWeightedGraphAlgorithms {
                 int src = edge.getSrc();
                 int dest = edge.getDest();
                 double weight = edge.getWeight();
-                reverseEdges.add(new Edges(dest, weight,src));
+                reverseEdges.add(new Edges(dest, weight, src));
             }
         }
         DWG reverseOne = new DWG(this.graph.getNodeList(), reverseEdges);
@@ -76,7 +76,7 @@ public class DWGAlgo implements DirectedWeightedGraphAlgorithms {
         return true;
     }
 
-    private void DFS( DWG graph ,int v) {
+    private void DFS(DWG graph, int v) {
         Nodes curr = (Nodes) graph.getNode(v);
         curr.setTag(1); // means visited
         for (EdgeData edges : curr.getEdgeMap().values()) {
@@ -90,14 +90,16 @@ public class DWGAlgo implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public double shortestPathDist(int src, int dest) {
-        Dijkstra(this.graph,src);
+        Dijkstra(this.graph, src,dest);
         Nodes source = (Nodes) this.getGraph().getNode(src);
-        return source.getMinDist().get(dest);
+        if (source.getMinDist().get(dest)==Double.MAX_VALUE) return -1;
+        else return source.getMinDist().get(dest);
     }
 
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
         return null;
+
     }
 
     @Override
@@ -119,19 +121,19 @@ public class DWGAlgo implements DirectedWeightedGraphAlgorithms {
     public boolean load(String file) {
         try {
             ArrayList[] arrayGraph = jsonToGraph(file);
-            this.graph = new DWG(arrayGraph[0],arrayGraph[1]);
+            this.graph = new DWG(arrayGraph[0], arrayGraph[1]);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    private  int getClosest( DWG graph , int src){
+    private int getClosest(DWG graph, int src) {
         double min = Double.MAX_VALUE;
         int minKey = -1;
-        Nodes source = (Nodes)graph.getNode(src);
-        for (EdgeData edge :source.getEdgeMap().values()) {
-            if (edge.getWeight()<min && graph.getNode(edge.getDest()).getTag()==0){
+        Nodes source = (Nodes) graph.getNode(src);
+        for (EdgeData edge : source.getEdgeMap().values()) {
+            if (edge.getWeight() < min && graph.getNode(edge.getDest()).getTag() == 0) {
                 minKey = edge.getDest();
                 min = edge.getWeight();
             }
@@ -139,14 +141,13 @@ public class DWGAlgo implements DirectedWeightedGraphAlgorithms {
         return minKey;
     }
 
-    private  double[] Dijkstra(DWG graph , int src) {
+    private int[] Dijkstra(DWG graph, int src,int dest) {///////////////////////////////////////////////////////
+
         double dist[] = new double[graph.nodeSize()];
-        int prev[] = new int[graph.nodeSize()];
-        for (int i = 0; i < dist.length; i++) {
+        int parents[] = new int[graph.nodeSize()];
+        ArrayList<Integer> pathList = new ArrayList<>(graph.nodeSize());
+        for (int i = 0; i < graph.nodeSize(); i++) {
             dist[i] = Double.MAX_VALUE;
-        }
-        for (int i = 0; i < prev.length; i++) {
-            prev[i] = -1;
         }
 
         int count = graph.nodeSize();
@@ -156,11 +157,18 @@ public class DWGAlgo implements DirectedWeightedGraphAlgorithms {
         Nodes source = (Nodes) graph.getNode(src);
         for (int key : source.getEdgeMap().keySet()) {
             dist[key] = source.getEdgeMap().get(key).getWeight();
-            source.getMinDist().put(key,source.getEdgeMap().get(key).getWeight());
+            source.getMinDist().replace(key, source.getEdgeMap().get(key).getWeight());
         }
+        for (Nodes node : graph.getNodeList()) {
+            source.getMinDist().put(node.getKey(), Double.MAX_VALUE);
+        }
+
         int actual = src;
+        source.getMinDist().replace(src, 0.0);
+        parents[src]=-1;
         while (count > 0) {
             NodeData actualNode = graph.getNode(actual);
+            update(graph, src, actual);
             int v = getClosest(graph, actual);
             if (v == -1) {
                 break;
@@ -169,20 +177,43 @@ public class DWGAlgo implements DirectedWeightedGraphAlgorithms {
                 nextNode.setTag(1);
                 count--;
                 for (int key : nextNode.getEdgeMap().keySet()) {
-//                    if (dist[v] + nextNode.getEdgeMap().get(key).getWeight() < dist[key]) {
-                    if (source.getMinDist().get(v)+nextNode.getEdgeMap().get(key).getWeight() < source.getMinDist().get(key)){
+                    int a = key;
+                    if (key == src) continue;
+                    if (source.getMinDist().get(key) > nextNode.getEdgeMap().get(key).getWeight() + source.getMinDist().get(nextNode.getKey())) {
+                        source.getMinDist().replace(key,nextNode.getEdgeMap().get(key).getWeight()+source.getMinDist().get(nextNode.getKey()));
+                        parents[key] = v;
                         dist[key] = dist[v] + nextNode.getEdgeMap().get(key).getWeight();
-                        source.getMinDist().replace(key,source.getMinDist().get(v)+nextNode.getEdgeMap().get(key).getWeight());
-                        prev[key-1] = v;
                     }
                 }
                 actual = v;
             }
+
         }
+        System.out.println(Arrays.toString(parents));
+        System.out.println(Arrays.toString(dist));
+        return parents;
+    }
 
-        System.out.println(Arrays.toString(prev));
-        return dist;
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        pathList.add(dest);
+//        int previous = prev[dest];
+//        while (previous!=-1){
+//            pathList.add(previous);
+//            previous= prev[previous];
+//        }
+//        System.out.println(pathList.toString());
+//        System.out.println(Arrays.toString(prev));
+//        return pathList;
 
+
+    private void update(DWG graph, int src, int dest) {
+        Nodes source = (Nodes) graph.getNode(src);
+        Nodes destination = (Nodes) graph.getNode(dest);
+        for (int key : destination.getEdgeMap().keySet()) {
+            if (source.getMinDist().get(key) > destination.getEdgeMap().get(key).getWeight() + source.getMinDist().get(dest)) {
+                source.getMinDist().replace(key, destination.getEdgeMap().get(key).getWeight() + source.getMinDist().get(dest));
+            }
+        }
     }
 
     private ArrayList[] jsonToGraph(String jsonPath) throws IOException, ParseException, org.json.simple.parser.ParseException {
