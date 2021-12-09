@@ -1,8 +1,6 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.ListIterator;
-import java.util.Map;
+
 
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
@@ -26,6 +24,12 @@ public class DWG implements DirectedWeightedGraph {
         }
     }
 
+    public DWG(ArrayList<Nodes> nodeList){
+        for (Nodes node: nodeList) {
+            this.addNode(node);
+        }
+    }
+
     @Override
     public NodeData getNode(int key) {
         // TODO Auto-generated method stub
@@ -34,13 +38,13 @@ public class DWG implements DirectedWeightedGraph {
 
     @Override
     public EdgeData getEdge(int src, int dest) {
-        for (int i = 0; i < this.graph.get(src).getEdgeList().size(); i++) {
-            if (this.graph.get(src).getEdgeList().get(i).getDest() == dest)
-                return this.graph.get(src).getEdgeList().get(i);
+        // for (int i = 0; i < this.graph.get(src).getEdgeList().size(); i++) {
+        //     if (this.graph.get(src).getEdgeList().get(i).getDest() == dest)
+        //         return this.graph.get(src).getEdgeList().get(i);
 
+        return this.graph.get(src).getEdgeMap().get(dest);
         }
-        return null;
-    }
+        
 
     @Override
     public void addNode(NodeData n) {
@@ -57,7 +61,8 @@ public class DWG implements DirectedWeightedGraph {
     @Override
     public void connect(int src, int dest, double w) {
         Edges new_edge = new Edges(src, w, dest);
-        this.graph.get(src).getEdgeList().add(new_edge);
+        // this.graph.get(src).getEdgeList().add(new_edge);
+        this.graph.get(src).getEdgeMap().put(dest, new_edge);
         // destList.get(dest).add(src);
         this.graph.get(dest).getEdgeListToMe().add(new_edge);
         nbrEdges++;
@@ -84,47 +89,49 @@ public class DWG implements DirectedWeightedGraph {
 
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
-        Iterator nodeIterator = this.graph.get(node_id).getEdgeList().iterator();
-        return nodeIterator;
+        // Iterator nodeIterator = this.graph.get(node_id).getEdgeList().iterator();
+        
+        return this.graph.get(node_id).getEdgeMap().values().iterator();
     }
 
     @Override
     public NodeData removeNode(int key) {
-        int edgesize = this.graph.get(key).getEdgeList().size();
-        //this.graph.remove(key);
-        Edges e = new Edges(key, 0, key);
-        for (int i = edgesize; 0<i; i--) {
-            this.graph.get(key).getEdgeList().remove(i);
+
+        for (int i = 0; i < this.graph.get(key).getEdgeListToMe().size(); i++) {
+            int src = this.graph.get(key).getEdgeListToMe().get(i).getSrc();
+            this.graph.get(src).getEdgeMap().remove(key);
+            nbrEdges--;
         }
-        int tome=this.graph.get(key).getEdgeListToMe().size();
-        for (int i = 0; i < tome; i++) {
-            int src=this.graph.get(key).getEdgeListToMe().get(i).getSrc();
-            this.graph.get(src).getEdgeList().get(index)
-            
+        this.graph.remove(key);
+        for (EdgeData curr : this.graph.get(key).getEdgeMap().values()) {
+            nbrEdges--;
         }
+        this.graph.remove(key);
     //    for (int i = 0; i < destList.get(key).size(); i++) {
     //        this.graph.get(destList.get(key).get(i)).getEdgeList().remove()
            
     //    } 
         nbrNodes--;
-        nbrEdges-=edgesize;
+        
         return null;
     }
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
-        for (int i = 0; i < this.graph.get(src).getEdgeList().size(); i++) {
-            if (this.graph.get(src).getEdgeList().get(i).getDest() == dest) {
-                this.graph.get(src).getEdgeList().remove(i);
+        // for (int i = 0; i < this.graph.get(src).getEdgeList().size(); i++) {
+        //     if (this.graph.get(src).getEdgeList().get(i).getDest() == dest) {
+        //         this.graph.get(src).getEdgeList().remove(i);
+        this.graph.get(src).getEdgeMap().remove(dest);
                 nbrEdges--;
-            }
-        }
+            //}
+        //}
         return null;
     }
 
     @Override
     public int nodeSize() {
         return nbrNodes;
+
 
     }
 

@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import api.EdgeData;
 import api.GeoLocation;
 import api.NodeData;
@@ -10,8 +12,10 @@ public class Nodes implements NodeData {
     private double weight = 0;
     private String info = null;
     private int tag = 0;
-    private ArrayList<Edges> edgeList = new ArrayList<>(0);
+    //private ArrayList<Edges> edgeList = new ArrayList<>(0);
+    private HashMap<Integer , EdgeData> edgeMap = new HashMap<>();
     private ArrayList<Edges> edgeListtoMe = new ArrayList<>();
+    private HashMap<Integer , Double> minDistMap = new HashMap<>();
 
     public Nodes(Point_3D point, int id) {
         // this.point.setX(point.x());
@@ -24,16 +28,23 @@ public class Nodes implements NodeData {
 
     public Nodes(Nodes other) {
         this.point = new Point_3D(other.getLocation());
-        this.edgeList = new ArrayList<>();
-        for (int i = 0; i < other.edgeList.size(); i++) {
-            this.edgeList.add(other.edgeList.get(i));
-        }
+        // this.edgeList = new ArrayList<>();
+        this.edgeMap = new HashMap<>();
+
+        // for (int i = 0; i < other.edgeList.size(); i++) {
+        //     this.edgeList.add(other.edgeList.get(i));
+        // }
+        this.edgeMap = other.edgeMap;
         this.id = other.getKey();
 
     }
 
-    public ArrayList<Edges> getEdgeList() {
-        return this.edgeList;
+    // public ArrayList<Edges> getEdgeList() {
+    //     return this.edgeList;
+    // }
+
+    public HashMap<Integer,EdgeData> getEdgeMap(){
+        return this.edgeMap;
     }
 
     public ArrayList<Edges> getEdgeListToMe() {
@@ -105,6 +116,9 @@ public class Nodes implements NodeData {
         ans += ("Nodes : x=" + this.point.x() + " y=" + this.point.y() + " z=" + this.point.z() + " id="
                 + this.getKey());
         return ans;
+    }
+    public HashMap<Integer,Double> getMinDist(){
+        return this.minDistMap;
     }
 
 }
