@@ -113,8 +113,7 @@ public class Nodes implements NodeData {
 
     public String toString() {
         String ans = "";
-        ans += ("Nodes : x=" + this.point.x() + " y=" + this.point.y() + " z=" + this.point.z() + " id="
-                + this.getKey());
+        ans += ( this.point.x() + "," + this.point.y() + "," + this.point.z());
         return ans;
     }
     public HashMap<Integer,Double> getMinDist(){

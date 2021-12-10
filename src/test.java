@@ -1,24 +1,14 @@
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.PriorityQueue;
-import java.util.Queue;
-
+import java.util.List;
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 import api.EdgeData;
 import api.NodeData;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.FileReader;
 import java.io.IOException;
-
 
 
 public class test {
@@ -26,11 +16,17 @@ public class test {
 
         DirectedWeightedGraphAlgorithms launchGraph2 = new DWGAlgo();
         launchGraph2.load("data/G1.json");
+        DWG thisGraph = (DWG) launchGraph2.getGraph();
         System.out.println(launchGraph2.isConnected());
         ArrayList<Nodes> MYG = new ArrayList<>();
         myGraghP myg = new myGraghP(MYG);
-        System.out.println(launchGraph2.shortestPathDist(0, 13));
-
+        System.out.println(launchGraph2.shortestPathDist(0, 1));
+        List<NodeData> list = launchGraph2.shortestPath(1,7);
+        for (NodeData node: list) {
+            System.out.print(node.getKey()+"->");
+        }
+        System.out.println(""+"center is :"+launchGraph2.center().getKey());
+        launchGraph2.save("data/GX.json");
 
         //System.out.println(testgraph.nodeSize());
         //testgraph.addNode(alone);

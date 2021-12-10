@@ -78,8 +78,9 @@ public class DWG implements DirectedWeightedGraph {
     public Iterator<EdgeData> edgeIter() {
         ArrayList<EdgeData> edgesList = new ArrayList<>();
         for (int i = 0; i < this.graph.size(); i++) {
-            while (edgeIter(i).hasNext()) {
-                EdgeData e = edgeIter().next();
+            Iterator<EdgeData> dataIterator= edgeIter(i);
+            while (dataIterator.hasNext()) {
+                EdgeData e = dataIterator.next();
                 edgesList.add(e);
             }
         }
@@ -90,29 +91,29 @@ public class DWG implements DirectedWeightedGraph {
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
         // Iterator nodeIterator = this.graph.get(node_id).getEdgeList().iterator();
-        
-        return this.graph.get(node_id).getEdgeMap().values().iterator();
+        Iterator<EdgeData> edgeDataIterator = this.graph.get(node_id).getEdgeMap().values().iterator();
+        return edgeDataIterator;
     }
 
     @Override
     public NodeData removeNode(int key) {
 
-        for (int i = 0; i < this.graph.get(key).getEdgeListToMe().size(); i++) {
-            int src = this.graph.get(key).getEdgeListToMe().get(i).getSrc();
+
+        while (!this.graph.get(key).getEdgeListToMe().isEmpty()){
+            int src = this.graph.get(key).getEdgeListToMe().get(0).getSrc();
+            for (int i = 0; i< graph.get(src).getEdgeListToMe().size();i++) {
+                if (this.graph.get(src).getEdgeListToMe().get(i).getSrc()==key){
+                    this.graph.get(src).getEdgeListToMe().remove(i);
+                    this.removeEdge(src,key);
+                }
+            }
+            this.graph.get(key).getEdgeListToMe().remove(0);
             this.graph.get(src).getEdgeMap().remove(key);
             nbrEdges--;
         }
+
         this.graph.remove(key);
-        for (EdgeData curr : this.graph.get(key).getEdgeMap().values()) {
-            nbrEdges--;
-        }
-        this.graph.remove(key);
-    //    for (int i = 0; i < destList.get(key).size(); i++) {
-    //        this.graph.get(destList.get(key).get(i)).getEdgeList().remove()
-           
-    //    } 
         nbrNodes--;
-        
         return null;
     }
 

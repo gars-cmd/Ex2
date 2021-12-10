@@ -26,6 +26,7 @@ public class myGraghP  implements ActionListener, MouseListener {
     JFrame j=new JFrame();
     Menu file=new Menu("File");
     MenuItem load=new MenuItem("Load");
+    private DWG Jgraph;
         //load.addActionListener(this);
           //   file.add(load);
     MenuItem print=new MenuItem("print");
@@ -259,6 +260,8 @@ public class myGraghP  implements ActionListener, MouseListener {
                 try {
                     ArrayList[] array_graph = jsonToGraph(file_name);
                     DWG testgraph = new DWG(array_graph[0],array_graph[1]);
+                    this.Jgraph = testgraph;
+                    this.j.dispose();
                     new myGraghP(testgraph.getNodeList());
 //                    ArrayList<Nodes> arrNodes = new ArrayList<>();
 //                    arrNodes = array_graph[0];
@@ -289,6 +292,10 @@ public class myGraghP  implements ActionListener, MouseListener {
         }
         if(str=="Save"){
             System.out.println("save");
+            Boolean ans ;
+            DWGAlgo graph = new DWGAlgo();
+            graph.SetGraph(this.Jgraph);
+            ans = graph.save("data/GX2.json");
         }
         if(str=="Edit"){
             System.out.println("Edit");
