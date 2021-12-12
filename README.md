@@ -41,7 +41,7 @@ All the usage of the algorithms are made in the DWGAlgo class.
 - This function check if a graph is strongly connected (if there is a path from each node to each node).
 
 
-- The algorithm realise a first DFS to mark all the nodes has visited, then reverse all the edges of the nodes and set visited tag of them to nonvisited and proceed a final DFS. If at the end all the nodes are visited then the graph is connected.
+- The algorithm realise a first BFS to mark all the nodes has visited, then reverse all the edges of the nodes and set visited tag of them to nonvisited and proceed a final BFS. If at the end all the nodes are visited then the graph is connected.
 
 
 
