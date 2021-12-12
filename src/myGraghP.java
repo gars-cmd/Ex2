@@ -1,3 +1,6 @@
+import api.DirectedWeightedGraphAlgorithms;
+import api.GeoLocation;
+import api.NodeData;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,6 +16,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class myGraghP  implements ActionListener, MouseListener {
@@ -27,15 +31,19 @@ public class myGraghP  implements ActionListener, MouseListener {
     Menu file=new Menu("File");
     MenuItem load=new MenuItem("Load");
     private DWG Jgraph;
+    private DirectedWeightedGraphAlgorithms AalgoGragh=new DWGAlgo();
+    String file_name="";
         //load.addActionListener(this);
           //   file.add(load);
-    MenuItem print=new MenuItem("print");
+    MenuItem deleteNode=new MenuItem("Delete point");
         //print.addActionListener(this);
         //file.add(print);
+    MenuItem addNode=new MenuItem("Add point");
+    MenuItem delete_edge =new MenuItem("Delete edge");
     MenuItem save=new MenuItem("Save");
         //save.addActionListener(this);
             // file.add(save);
-    MenuItem edit=new MenuItem("Edit");
+
         //edit.addActionListener(this);
           //   file.add(edit);
     Menu Algo=new Menu("Algo");
@@ -62,7 +70,7 @@ public class myGraghP  implements ActionListener, MouseListener {
     MenuBar menubar=new MenuBar();
 
 
-    public myGraghP(ArrayList<Nodes> test2) throws HeadlessException {
+    public myGraghP(ArrayList<Nodes> test2,String path) throws HeadlessException {
 
 //         this.L=new JLabel();
 //        L.setBounds(10,10,width,height-100);
@@ -80,14 +88,16 @@ public class myGraghP  implements ActionListener, MouseListener {
         load.addActionListener(this);
              file.add(load);
         //MenuItem print=new MenuItem("print");
-        print.addActionListener(this);
-        file.add(print);
+        deleteNode.addActionListener(this);
+        Algo.add(deleteNode);
+        addNode.addActionListener(this);
+        Algo.add(addNode);
         //MenuItem save=new MenuItem("Save");
         save.addActionListener(this);
              file.add(save);
         //MenuItem edit=new MenuItem("Edit");
-        edit.addActionListener(this);
-             file.add(edit);
+        delete_edge.addActionListener(this);
+            Algo.add(delete_edge);
         //Menu Algo=new Menu("Algo");
         //MenuItem shortestPathDist=new MenuItem("shortestPathDist");
             shortestPathDist.addActionListener(this);
@@ -119,7 +129,14 @@ public class myGraghP  implements ActionListener, MouseListener {
        this.j.setVisible(true);
        this.j.addMouseListener(this);
         this.j.add(new mypanel(test2));
+        this.Jgraph=new DWG(test2);
+        this.file_name=path;
+        if(!this.file_name.isEmpty()) {
+            this.AalgoGragh.load(this.file_name);
+
+        }
         setvalue(test2);
+
 
     }
     public void setvalue(ArrayList<Nodes> a) {
@@ -196,7 +213,10 @@ public class myGraghP  implements ActionListener, MouseListener {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Point_3D prev = new Point_3D(0, 0, 0);
-            for (int i = 0; i < this.a.size(); i++) {
+//            for (int i = 0; i < this.a.size(); i++) {
+            for (Nodes node:this.a) {
+                int i=node.getKey();
+
                 g.setColor(Color.BLACK);
                 Point_3D temp_p = new Point_3D(this.a.get(i).getLocation().x(), this.a.get(i).getLocation().y(), this.a.get(i).getLocation().z());
                 g.fillOval((int) scalex(temp_p.x()), (int) scaley(temp_p.y()), 10, 10);
@@ -262,23 +282,7 @@ public class myGraghP  implements ActionListener, MouseListener {
                     DWG testgraph = new DWG(array_graph[0],array_graph[1]);
                     this.Jgraph = testgraph;
                     this.j.dispose();
-                    new myGraghP(testgraph.getNodeList());
-//                    ArrayList<Nodes> arrNodes = new ArrayList<>();
-//                    arrNodes = array_graph[0];
-//                    ArrayList<Edges> arrEdges = new ArrayList<>();
-//                    arrEdges = array_graph[1];
-//                    for (int i = 0; i < arrNodes.size(); i++) {
-////                        for (int j = 0; j < arrEdges.size(); j++) {
-//                        for (int key : arrNodes.get(i).getEdgeMap().keySet()) {
-//                            if (arrEdges.get(key).getSrc() == i) {
-//                                arrNodes.get(i).getEdgeMap().put(arrEdges.get(key).getSrc(),arrEdges.get(key));
-//
-//                            }
-//                        }
-//                    }
-//                    new myGraghP(arrNodes);
-
-
+                    new myGraghP(testgraph.getNodeList(),file_name);
 
 
                 } catch (IOException ex) {
@@ -286,44 +290,207 @@ public class myGraghP  implements ActionListener, MouseListener {
                 } catch (ParseException | java.text.ParseException ex) {
                     ex.printStackTrace();
                 }
+              //  this.file_name=file_name;
+                this.AalgoGragh.load(file_name);
                 //this.L.setVisible(true);
-                System.out.println("load action");
+
             }
         }
         if(str=="Save"){
-            System.out.println("save");
-            Boolean ans ;
-            DWGAlgo graph = new DWGAlgo();
-            graph.SetGraph(this.Jgraph);
-            ans = graph.save("data/GX2.json");
+            String fileJsonName=JOptionPane.showInputDialog(null,"Enter file name:");
+            try {
+                Boolean ans;
+                System.out.println("save");
+                ans = this.AalgoGragh.save("data/" + fileJsonName + ".json");
+                JOptionPane.showMessageDialog(null, "The file was saved successfully");//successful
+            }
+            catch (Exception exception){
+                JOptionPane.showMessageDialog(null, "saved fail");
+                System.out.println(fileJsonName);
+            }
         }
-        if(str=="Edit"){
-            System.out.println("Edit");
 
-        }
+
+
         if(str=="shortestPath"){
-            System.out.println("shortpath");
+            String inputSrc=JOptionPane.showInputDialog(null,"Enter src:");
+            String inputDest=JOptionPane.showInputDialog(null,"Enter dest:");
+
+            try{
+                int src = Integer.parseInt(inputSrc);
+                int dest = Integer.parseInt(inputDest);
+
+                List<NodeData> shortlist = this.AalgoGragh.shortestPath(src, dest);
+                String ans="";
+                for (int i = 0; i <shortlist.size() ; i++) {
+                    ans=ans+shortlist.get(i).getKey();
+                    if(i!=shortlist.size()-1) {
+                        ans = ans + "-->";
+                    }
+                }
+
+                JOptionPane.showMessageDialog(null, "The Shortest path  from " + src + " to " + dest + " is: "+ans );
+            }
+            catch (Exception exception){
+                JOptionPane.showMessageDialog(null, "Invalid Input");
+            }
+
 
         }
         if(str=="shortestPathDist"){
-            System.out.println("shortDist");
+            String inputSrc=JOptionPane.showInputDialog(null,"Enter src:");
+            String inputDest=JOptionPane.showInputDialog(null,"Enter dest:");
+
+            try{
+                int src = Integer.parseInt(inputSrc);
+                int dest = Integer.parseInt(inputDest);
+
+                double path_dist = this.AalgoGragh.shortestPathDist(src, dest);
+
+                JOptionPane.showMessageDialog(null, "The Shortest Distance from " + src + " to " + dest + " is: " + path_dist);
+            }
+            catch (Exception exception){
+                JOptionPane.showMessageDialog(null, "pleas load gragh /has no path");
+            }
+
         }
         if(str=="connect"){
-            System.out.println("connect");
+            String inputSrc=JOptionPane.showInputDialog(null,"Enter src:");
+            String inputDest=JOptionPane.showInputDialog(null,"Enter dest:");
+            String inputWight=JOptionPane.showInputDialog(null,"Enter weight:");
+            try{
+                int src = Integer.parseInt(inputSrc);
+                int dest = Integer.parseInt(inputDest);
+                double weight=Double.parseDouble(inputWight);
+                boolean ans;
+              this.AalgoGragh.getGraph().connect(src, dest,weight);
+
+                ans=this.AalgoGragh.save("data/myGraghChange.json");
+
+                ArrayList[] array_graph = jsonToGraph("data/myGraghChange.json");
+                DWG testgraph = new DWG(array_graph[0],array_graph[1]);
+                this.Jgraph = testgraph;
+                this.j.dispose();
+                new myGraghP(testgraph.getNodeList(),"data/myGraghChange.json");
+
+
+            }
+            catch (Exception exception){
+                JOptionPane.showMessageDialog(null, "connect failed");//failed
+            }
+
+
         }
         if(str=="isConnect"){
-            System.out.println("isConnect");
+            try{
+                boolean ans=this.AalgoGragh.isConnected();
+                JOptionPane.showMessageDialog(null,ans);
+            }catch (Exception exception){
+                JOptionPane.showMessageDialog(null,"isconnect failed");
+            }
+
         }
         if(str=="center"){
-            System.out.println("center");
+            try{
+                NodeData temp;
+                temp=this.AalgoGragh.center();
+
+                JOptionPane.showMessageDialog(null,"The center ID point is: "+temp.getKey());
+            }catch (Exception exception){
+                JOptionPane.showMessageDialog(null,"center failed");
+
+            }
+
 
         }
         if(str=="tsp"){
             System.out.println("tsp");
 
         }
-        if(str=="print"){
-           // my_panel.mypanel()
+        if(str=="Delete edge"){
+            String idpoint_src=JOptionPane.showInputDialog(null,"Enter Edge src:");
+            String idpoint_dest=JOptionPane.showInputDialog(null,"Enter Edge dest :");
+            try{
+                int src=Integer.parseInt(idpoint_src);
+                int dest=Integer.parseInt(idpoint_dest);
+                this.AalgoGragh.getGraph().removeEdge(src,dest);
+                boolean ans;
+                ans = this.AalgoGragh.save("data/myGraghChange.json");
+
+                ArrayList[] array_graph = jsonToGraph("data/myGraghChange.json");
+                DWG testgraph = new DWG(array_graph[0], array_graph[1]);
+
+                this.Jgraph = testgraph;
+                this.j.dispose();
+                new myGraghP(testgraph.getNodeList(), "data/myGraghChange.json");
+            }catch (Exception exception){
+                JOptionPane.showMessageDialog(null,"delete edge failed");
+            }
+
+        }
+        if(str=="Delete point"){
+            String inputid=JOptionPane.showInputDialog(null,"Enter point ID:");
+
+
+            int idp=Integer.parseInt(inputid);
+
+
+            try{
+                if(idp<this.AalgoGragh.getGraph().nodeSize()||idp>=0) {
+
+                    this.AalgoGragh.getGraph().removeNode(idp);
+
+                    boolean ans;
+                    ans = this.AalgoGragh.save("data/myGraghChange.json");
+
+                    ArrayList[] array_graph = jsonToGraph("data/myGraghChange.json");
+                    DWG testgraph = new DWG(array_graph[0], array_graph[1]);
+
+                    this.Jgraph = testgraph;
+                    this.j.dispose();
+                    new myGraghP(testgraph.getNodeList(), "data/myGraghChange.json");
+
+                }
+
+
+            }catch (Exception exception){
+                if(idp>this.AalgoGragh.getGraph().nodeSize()||idp<0) {
+                    JOptionPane.showMessageDialog(null, "This point does not exist");
+
+                }else {
+                JOptionPane.showMessageDialog(null,"pleas load gragh");
+                }
+            }
+
+        }
+        if(str=="Add point"){
+            String inputx=JOptionPane.showInputDialog(null,"Enter x:");
+            String inputy=JOptionPane.showInputDialog(null,"Enter y:");
+
+            try{
+                double x = Double.parseDouble(inputx);
+                double y = Double.parseDouble(inputy);
+                Point_3D g=new Point_3D(x,y,0);
+                NodeData temp=new Nodes(g,this.AalgoGragh.getGraph().nodeSize());
+
+
+                boolean ans;
+                this.AalgoGragh.getGraph().addNode(temp);
+
+                ans=this.AalgoGragh.save("data/myGraghChange.json");
+
+                ArrayList[] array_graph = jsonToGraph("data/myGraghChange.json");
+                DWG testgraph = new DWG(array_graph[0],array_graph[1]);
+                this.Jgraph = testgraph;
+                this.j.dispose();
+                new myGraghP(testgraph.getNodeList(),"data/myGraghChange.json");
+
+
+            }
+            catch (Exception exception){
+                JOptionPane.showMessageDialog(null, "Add point failed");//failed
+            }
+
         }
     }
 
