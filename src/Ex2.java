@@ -45,8 +45,7 @@ public class Ex2 {
         DWG graph = (DWG) alg.getGraph();
         new myGraghP(graph.getNodeList(),json_file);
         // ****** Add your code here ******
-        //
-        // ********************************
+        //        // ********************************
     }
     public static void main(String[] args){
 
