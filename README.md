@@ -1,9 +1,8 @@
 # Ex 2
-
-
 third assignment of OOP course
 
-
+## How to download the project 
+download the jar file from the realease then add it into the data directory from the project then open command line and enter : "java -jar Ex2.jar <file.json>" and press enter (the <file.json> it is the file you want to load from it a graph )
 
 ## Project theme
 
