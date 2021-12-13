@@ -50,9 +50,6 @@ public class Ex2 {
     }
     public static void main(String[] args){
 
-        Scanner sc= new Scanner(System.in);
-        String str= sc.nextLine();
-        String d="data/";
-        runGUI(d+str);
+        runGUI(args[0]);
     }
 }
