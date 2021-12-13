@@ -108,6 +108,12 @@ All the usage of the algorithms are made in the DWGAlgo class.
 ## Results
 
 
+Graph size  | is connect |  center  | shortestPathDist  | shortestPath
+1000        |   666ms    | 23s572ms | 7s64ms (20,50)    | 7s22ms (20,50)
+10 000      |   2s499ms  | timeout  | 7s553ms (20,50)   |  7s99ms (20,50)
+100 000     | 18s499ms   | timeout  | 10min18sec(20,50) |  11min21s (20,50)
+
+
 
 ## Menu Bar
 there is two main button:
