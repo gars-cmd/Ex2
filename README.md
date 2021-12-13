@@ -109,8 +109,38 @@ All the usage of the algorithms are made in the DWGAlgo class.
 
 
 
-## the failures of our implementation
- - due to our use of arrayList to store the nodes  , we didn't succeed to make the possibility to remove nodes in the GUI interface .
+## Menu Bar
+there is two main button:
+- "File" to load graph from json or to save graph to json 
+- "Algo" to make operation on the graph or to modified it :
+  - delete point.
+  - Add point.
+  - Delete edge.
+  - shortestPathDist -> print the weight of the shortest between two nodes.
+  - shortestPath -> print the shortest path between two nodes.
+  - connect -> create edge between two point .
+  - isConnect -> check if the graph is strongely connected.
+  - center -> return the coordinates of the center of the graph.
+  - tsp
+ 
+
+
+
+## More info
+ - due to our use of arrayList to store the nodes  , we didn't succeed to make the possibility to removes all nodes but each time remove the node with the biggest id 
+ 
+ 
+## pictures
+[![pic1.jpg](https://i.postimg.cc/ZRcCCPDG/Screenshot-1.jpg)](https://postimg.cc/VrJYhtwg)
+[![pic2.jpg](https://i.postimg.cc/HnvntYm3/Screenshot-4.jpg)](https://postimg.cc/5Qvf4M6F)
+[![pic3.jpg](https://i.postimg.cc/wxw1zVNJ/Whats-App-Image-2021-12-13-at-16-12-57.jpg)](https://postimg.cc/K4gGrtJv)
+[![pic4.jpg](https://i.postimg.cc/xT7qJ1t1/Whats-App-Image-2021-12-13-at-16-14-04-1.jpg)](https://postimg.cc/7f3qjDFF)
+
+
+
+
+
+  
   
 
 
