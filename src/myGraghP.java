@@ -33,38 +33,38 @@ public class myGraghP  implements ActionListener, MouseListener {
     private DWG Jgraph;
     private DirectedWeightedGraphAlgorithms AalgoGragh=new DWGAlgo();
     String file_name="";
-        //load.addActionListener(this);
-          //   file.add(load);
+    //load.addActionListener(this);
+    //   file.add(load);
     MenuItem deleteNode=new MenuItem("Delete point");
-        //print.addActionListener(this);
-        //file.add(print);
+    //print.addActionListener(this);
+    //file.add(print);
     MenuItem addNode=new MenuItem("Add point");
     MenuItem delete_edge =new MenuItem("Delete edge");
     MenuItem save=new MenuItem("Save");
-        //save.addActionListener(this);
-            // file.add(save);
+    //save.addActionListener(this);
+    // file.add(save);
 
-        //edit.addActionListener(this);
-          //   file.add(edit);
+    //edit.addActionListener(this);
+    //   file.add(edit);
     Menu Algo=new Menu("Algo");
     MenuItem shortestPathDist=new MenuItem("shortestPathDist");
-            //shortestPathDist.addActionListener(this);
-            //Algo.add(shortestPathDist);
+    //shortestPathDist.addActionListener(this);
+    //Algo.add(shortestPathDist);
     MenuItem shortestPath=new MenuItem("shortestPath");
-            //shortestPath.addActionListener(this);
-             //Algo.add(shortestPath);
+    //shortestPath.addActionListener(this);
+    //Algo.add(shortestPath);
     MenuItem connect=new MenuItem("connect");
-            //connect.addActionListener(this);
-            //Algo.add(connect);
+    //connect.addActionListener(this);
+    //Algo.add(connect);
     MenuItem isConnected=new MenuItem("isConnect");
-            //isConnected.addActionListener(this);
-            //Algo.add(isConnected);
+    //isConnected.addActionListener(this);
+    //Algo.add(isConnected);
     MenuItem center=new MenuItem("center");
-            //center.addActionListener(this.j);
-            //Algo.add(center);
+    //center.addActionListener(this.j);
+    //Algo.add(center);
     MenuItem tsp=new MenuItem("tsp");
-           // tsp.addActionListener(this);
-            //Algo.add(tsp);
+    // tsp.addActionListener(this);
+    //Algo.add(tsp);
 
 
     MenuBar menubar=new MenuBar();
@@ -83,10 +83,10 @@ public class myGraghP  implements ActionListener, MouseListener {
         this.j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.j.setSize(screenSize.width/2  , screenSize.height/2);
 
-       // Menu file=new Menu("File");
+        // Menu file=new Menu("File");
         //MenuItem load=new MenuItem("Load");
         load.addActionListener(this);
-             file.add(load);
+        file.add(load);
         //MenuItem print=new MenuItem("print");
         deleteNode.addActionListener(this);
         Algo.add(deleteNode);
@@ -94,40 +94,40 @@ public class myGraghP  implements ActionListener, MouseListener {
         Algo.add(addNode);
         //MenuItem save=new MenuItem("Save");
         save.addActionListener(this);
-             file.add(save);
+        file.add(save);
         //MenuItem edit=new MenuItem("Edit");
         delete_edge.addActionListener(this);
-            Algo.add(delete_edge);
+        Algo.add(delete_edge);
         //Menu Algo=new Menu("Algo");
         //MenuItem shortestPathDist=new MenuItem("shortestPathDist");
-            shortestPathDist.addActionListener(this);
-            Algo.add(shortestPathDist);
+        shortestPathDist.addActionListener(this);
+        Algo.add(shortestPathDist);
         //MenuItem shortestPath=new MenuItem("shortestPath");
-            shortestPath.addActionListener(this);
-             Algo.add(shortestPath);
+        shortestPath.addActionListener(this);
+        Algo.add(shortestPath);
         //MenuItem connect=new MenuItem("connect");
-            connect.addActionListener(this);
-            Algo.add(connect);
+        connect.addActionListener(this);
+        Algo.add(connect);
         //MenuItem isConnected=new MenuItem("isConnect");
-            isConnected.addActionListener(this);
-            Algo.add(isConnected);
+        isConnected.addActionListener(this);
+        Algo.add(isConnected);
         //MenuItem center=new MenuItem("center");
-            center.addActionListener(this);
-            Algo.add(center);
-       // MenuItem tsp=new MenuItem("tsp");
-            tsp.addActionListener(this);
-            Algo.add(tsp);
+        center.addActionListener(this);
+        Algo.add(center);
+        // MenuItem tsp=new MenuItem("tsp");
+        tsp.addActionListener(this);
+        Algo.add(tsp);
 
 
-            MenuBar menubar=new MenuBar();
-                menubar.add(file);
-                menubar.add(Algo);
-       this.j.setMenuBar(menubar);
-       //my_panel.mypanel panel=new my_panel.mypanel();
-       //this.j.add(new mypanel(this.test2));
-       this.j.setTitle("gal and avidan");
-       this.j.setVisible(true);
-       this.j.addMouseListener(this);
+        MenuBar menubar=new MenuBar();
+        menubar.add(file);
+        menubar.add(Algo);
+        this.j.setMenuBar(menubar);
+        //my_panel.mypanel panel=new my_panel.mypanel();
+        //this.j.add(new mypanel(this.test2));
+        this.j.setTitle("gal and avidan");
+        this.j.setVisible(true);
+        this.j.addMouseListener(this);
         this.j.add(new mypanel(test2));
         this.Jgraph=new DWG(test2);
         this.file_name=path;
@@ -290,7 +290,7 @@ public class myGraghP  implements ActionListener, MouseListener {
                 } catch (ParseException | java.text.ParseException ex) {
                     ex.printStackTrace();
                 }
-              //  this.file_name=file_name;
+                //  this.file_name=file_name;
                 this.AalgoGragh.load(file_name);
                 //this.L.setVisible(true);
 
@@ -363,7 +363,7 @@ public class myGraghP  implements ActionListener, MouseListener {
                 int dest = Integer.parseInt(inputDest);
                 double weight=Double.parseDouble(inputWight);
                 boolean ans;
-              this.AalgoGragh.getGraph().connect(src, dest,weight);
+                this.AalgoGragh.getGraph().connect(src, dest,weight);
 
                 ans=this.AalgoGragh.save("data/myGraghChange.json");
 
@@ -415,14 +415,14 @@ public class myGraghP  implements ActionListener, MouseListener {
                 int dest=Integer.parseInt(idpoint_dest);
                 this.AalgoGragh.getGraph().removeEdge(src,dest);
                 boolean ans;
-                ans = this.AalgoGragh.save("data/myGraghChange.json");
+                ans = this.AalgoGragh.save("myGraghChange.json");
 
-                ArrayList[] array_graph = jsonToGraph("data/myGraghChange.json");
+                ArrayList[] array_graph = jsonToGraph("myGraghChange.json");
                 DWG testgraph = new DWG(array_graph[0], array_graph[1]);
 
                 this.Jgraph = testgraph;
                 this.j.dispose();
-                new myGraghP(testgraph.getNodeList(), "data/myGraghChange.json");
+                new myGraghP(testgraph.getNodeList(), "myGraghChange.json");
             }catch (Exception exception){
                 JOptionPane.showMessageDialog(null,"delete edge failed");
             }
@@ -441,14 +441,14 @@ public class myGraghP  implements ActionListener, MouseListener {
                     this.AalgoGragh.getGraph().removeNode(idp);
 
                     boolean ans;
-                    ans = this.AalgoGragh.save("data/myGraghChange.json");
+                    ans = this.AalgoGragh.save("myGraghChange.json");
 
-                    ArrayList[] array_graph = jsonToGraph("data/myGraghChange.json");
+                    ArrayList[] array_graph = jsonToGraph("myGraghChange.json");
                     DWG testgraph = new DWG(array_graph[0], array_graph[1]);
 
                     this.Jgraph = testgraph;
                     this.j.dispose();
-                    new myGraghP(testgraph.getNodeList(), "data/myGraghChange.json");
+                    new myGraghP(testgraph.getNodeList(), "myGraghChange.json");
 
                 }
 
@@ -458,7 +458,7 @@ public class myGraghP  implements ActionListener, MouseListener {
                     JOptionPane.showMessageDialog(null, "This point does not exist");
 
                 }else {
-                JOptionPane.showMessageDialog(null,"pleas load gragh");
+                    JOptionPane.showMessageDialog(null,"pleas load gragh");
                 }
             }
 
@@ -477,13 +477,13 @@ public class myGraghP  implements ActionListener, MouseListener {
                 boolean ans;
                 this.AalgoGragh.getGraph().addNode(temp);
 
-                ans=this.AalgoGragh.save("data/myGraghChange.json");
+                ans=this.AalgoGragh.save("myGraghChange.json");
 
                 ArrayList[] array_graph = jsonToGraph("data/myGraghChange.json");
                 DWG testgraph = new DWG(array_graph[0],array_graph[1]);
                 this.Jgraph = testgraph;
                 this.j.dispose();
-                new myGraghP(testgraph.getNodeList(),"data/myGraghChange.json");
+                new myGraghP(testgraph.getNodeList(),"/myGraghChange.json");
 
 
             }
@@ -576,5 +576,4 @@ public class myGraghP  implements ActionListener, MouseListener {
         return list_graph;
     }
 
-    }
-
+}
