@@ -51,7 +51,7 @@ All the usage of the algorithms are made in the DWGAlgo class.
 - This function return the weight of the shortestPath from node x to node y.
 
 
-- The algorithm first of all proceed to a dijska algorithm that in the x node the shortestPath weight from it to each node in the graph.
+- For the Algorithm we procceed to a dijska with the help of it we update all the minimum distance from x to all others node and just pick the weight we wanted
 
 
 
@@ -106,5 +106,11 @@ All the usage of the algorithms are made in the DWGAlgo class.
 
 
 ## Results
+
+
+
+## the failures of our implementation
+ - due to our use of arrayList to store the nodes  , we didn't succeed to make the possibility to remove nodes in the GUI interface .
+  
 
 
