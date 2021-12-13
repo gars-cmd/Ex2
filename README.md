@@ -133,7 +133,8 @@ there is two main button:
 
 
 ## More info
- - due to our use of arrayList to store the nodes  , we didn't succeed to make the possibility to removes all nodes but each time remove the node with the biggest id 
+ - due to our use of arrayList to store the nodes  , we didn't succeed to make the possibility to removes all nodes but each time remove the node with the biggest id .
+ - To load bigger graph download the file zip in the Assigment/ex2/data directory , extract the json files and you can use it.
  
  
 ## pictures
